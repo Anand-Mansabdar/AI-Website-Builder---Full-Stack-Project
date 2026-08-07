@@ -1,9 +1,29 @@
-import React from 'react'
+import React from "react";
+import { Routes, Route, Link } from "react-router-dom";
+import { AuthLayout, GuestLayout } from "./pages/Layout";
+import AuthenticationPage from "./pages/AuthenticationPage";
+import HomePage from "./pages/HomePage";
+import BuilderPage from "./pages/BuilderPage";
+import Preview from "./pages/Preview";
 
 const App = () => {
   return (
-    <div className='bg-red-300'>App</div>
-  )
-}
+    <Routes>
+      <Route element={<GuestLayout />}>
+        <Route path="/login" element={<AuthenticationPage mode="login" />} />
+        <Route
+          path="/register"
+          element={<AuthenticationPage mode="register" />}
+        />
+      </Route>
 
-export default App
+      <Route element={<AuthLayout />}>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/builder/:id" element={<BuilderPage />} />
+        <Route path="/preview/:id" element={<Preview />} />
+      </Route>
+    </Routes>
+  );
+};
+
+export default App;
