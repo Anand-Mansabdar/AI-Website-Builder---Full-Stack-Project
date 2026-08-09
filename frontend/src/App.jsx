@@ -1,5 +1,5 @@
 import React from "react";
-import { Routes, Route, Link } from "react-router-dom";
+import { Routes, Route, Link, Navigate } from "react-router-dom";
 import { AuthLayout, GuestLayout } from "./pages/Layout";
 import AuthenticationPage from "./pages/AuthenticationPage";
 import HomePage from "./pages/HomePage";
@@ -22,6 +22,8 @@ const App = () => {
         <Route path="/builder/:id" element={<BuilderPage />} />
         <Route path="/preview/:id" element={<Preview />} />
       </Route>
+
+      <Route path="*" element={<Navigate to={"/"} replace />}></Route>
     </Routes>
   );
 };
