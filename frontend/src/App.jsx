@@ -5,26 +5,30 @@ import AuthenticationPage from "./pages/AuthenticationPage";
 import HomePage from "./pages/HomePage";
 import BuilderPage from "./pages/BuilderPage";
 import Preview from "./pages/Preview";
+import { Toaster } from "react-hot-toast";
 
 const App = () => {
   return (
-    <Routes>
-      <Route element={<GuestLayout />}>
-        <Route path="/login" element={<AuthenticationPage mode="login" />} />
-        <Route
-          path="/register"
-          element={<AuthenticationPage mode="register" />}
-        />
-      </Route>
+    <>
+      <Toaster />
+      <Routes>
+        <Route element={<GuestLayout />}>
+          <Route path="/login" element={<AuthenticationPage mode="login" />} />
+          <Route
+            path="/register"
+            element={<AuthenticationPage mode="register" />}
+          />
+        </Route>
 
-      <Route element={<AuthLayout />}>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/builder/:id" element={<BuilderPage />} />
-        <Route path="/preview/:id" element={<Preview />} />
-      </Route>
+        <Route element={<AuthLayout />}>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/builder/:id" element={<BuilderPage />} />
+          <Route path="/preview/:id" element={<Preview />} />
+        </Route>
 
-      <Route path="*" element={<Navigate to={"/"} replace />}></Route>
-    </Routes>
+        <Route path="*" element={<Navigate to={"/"} replace />}></Route>
+      </Routes>
+    </>
   );
 };
 
