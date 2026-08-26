@@ -11,7 +11,7 @@ const HomePage = () => {
     user,
     projects,
     loadingProjects,
-    generatingProjects,
+    generatingProject,
     loadProjects,
     handleGenerate,
     handleDelete,
@@ -106,16 +106,20 @@ const HomePage = () => {
               <div className="space-y-2 max-h-[80vh] overflow-y-auto  pr-1">
                 {projects.map((p) => (
                   <div
-                    className="bg-white/5 border border-white/10 rounded-lg px-4 py-3 flex items-center justify-between group hover:border-white/20 hover:bg-white/20 cursor-pointer backdrop-blur-md transition-all"
+                    className="bg-white/5 border border-white/10 rounded-lg px-4 py-3 flex items-center justify-between group hover:border-white/20 hover:bg-white/20 backdrop-blur-md transition-all"
                     key={p._id}
-                    onClick={() => navigate(`/builder/${p._id}`)}
                   >
-                    <div className="flex-1 min-w-0">
+                    <button
+                      type="button"
+                      className="flex-1 min-w-0 text-left pr-3"
+                      onClick={() => navigate(`/builder/${p._id}`)}
+                      aria-label={`Open ${p.name || "project"}`}
+                    >
                       <p className="text-sm font-medium text-white truncate">
                         {p.name}
                       </p>
 
-                      <div className="flex items-center gap-3 mt-0.5  ">
+                      <div className="flex items-center gap-3 mt-0.5">
                         <span className="text-xs text-zinc-200 flex items-center gap-1">
                           <ClockIcon size={10} />
                           {moment(p.updatedAt || p.createdAt).fromNow()}
@@ -125,15 +129,17 @@ const HomePage = () => {
                           {p.version}
                         </span>
                       </div>
-                    </div>
+                    </button>
 
                     <div className="flex items-center gap-2">
                       <button
+                        type="button"
                         className="p-1.5 rounded-md text-zinc-200 hover:text-rose-400 hover:bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity"
                         onClick={(e) => {
                           e.stopPropagation();
                           handleDelete(p._id);
                         }}
+                        aria-label={`Delete ${p.name || "project"}`}
                       >
                         <TrashIcon size={14} />
                       </button>
