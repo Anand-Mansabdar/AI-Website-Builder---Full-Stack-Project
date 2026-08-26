@@ -232,7 +232,7 @@ export function AppContextProvider({ children }) {
 
   useEffect(() => {
     return () => {
-      debounceSave.cancel();
+      debounceSave.flush();
     };
   }, [debounceSave]);
 

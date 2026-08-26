@@ -67,7 +67,7 @@ const HomePage = () => {
           <div className="w-full mt-6">
             <PromptInput
               onSubmit={handleGenerate}
-              loading={generatingProjects}
+              loading={generatingProject}
               placeholder="Describe the website you want to create..."
               variant="glass"
               autoFocus
@@ -82,7 +82,7 @@ const HomePage = () => {
                     key={i}
                     onClick={() => handleGenerate(tag)}
                     className="px-4 py-1.5 border rounded-full text-sm text-white bg-white/10 border-white/25 hover:bg-white/20 transition cursor-pointer shrink-0 font-medium"
-                    disabled={generatingProjects}
+                    disabled={generatingProject}
                   >
                     {tag}
                   </button>

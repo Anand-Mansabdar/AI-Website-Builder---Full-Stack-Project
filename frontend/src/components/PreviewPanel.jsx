@@ -110,9 +110,9 @@ const PreviewPanel = ({ project, activeFile, showCode }) => {
             "sp-layout": "sp-layout",
             "sp-preview": "sp-preview",
           },
-          logLevel0,
+          logLevel:0,
         }}
-        customSetup={dependencies}
+        customSetup={{dependencies}}
         theme={{
           colors: {
             surface1: "#ffffff",
