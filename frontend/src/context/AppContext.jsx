@@ -3,11 +3,13 @@ import React, {
   useCallback,
   useContext,
   useEffect,
+  useMemo,
   useState,
 } from "react";
 import api from "../api/api";
 import { toast } from "react-hot-toast";
 import { Navigate, useNavigate } from "react-router-dom";
+import debounce from "lodash.debounce";
 
 const AppContext = createContext(undefined);
 
@@ -39,7 +41,7 @@ export function AppContextProvider({ children }) {
 
   useEffect(() => {
     checkSession();
-  }, [checkSession]);
+  }, []);
 
   const normalizeUser = (user) => ({
     ...user,
@@ -136,7 +138,7 @@ export function AppContextProvider({ children }) {
   };
 
   useEffect(() => {
-    if (!activeProject?._id || user) return;
+    if (!activeProject?._id || !user) return;
 
     const isOngoing =
       activeProject.status === "generating" ||
@@ -179,7 +181,7 @@ export function AppContextProvider({ children }) {
       if (!user) return;
       try {
         await api.delete(`/api/projects/${id}`);
-        setProjects((prev) => prev.filter((project) => prev._id !== id));
+        setProjects((prev) => prev.filter((project) => project._id !== id));
         toast.success("Project Deleted");
       } catch (error) {
         console.error("Failed to delete project:", error);
@@ -187,6 +189,61 @@ export function AppContextProvider({ children }) {
       }
     },
     [user],
+  );
+
+  const handleChat = useCallback(
+    async (prompt) => {
+      if (!activeFile || !user) return;
+
+      setChatLoading(true);
+      try {
+        const { data } = await api.post(
+          `/api/projects/${activeProject._id}/chat`,
+          { prompt },
+        );
+        setActiveProject(data);
+
+        if (data.errors && data.errors.length > 0) {
+          toast.error(`${data.errors.length} revision patch(es) failed`);
+        } else {
+          toast.success(`Updated to version ${data.version}`);
+        }
+      } catch (error) {
+        console.error("Revision request failed:", error);
+      } finally {
+        setChatLoading(false);
+      }
+    },
+    [activeProject, user],
+  );
+
+  const debounceSave = useMemo(
+    () =>
+      debounce(async (files, id) => {
+        try {
+          await api.put(`/api/projects/${id}/files`, { files });
+        } catch (error) {
+          console.error("Failed to auto-save files", error);
+          toast.error("Failed to save code modifications");
+        }
+      }, 1000),
+    [],
+  );
+
+  useEffect(() => {
+    return () => {
+      debounceSave.cancel();
+    };
+  }, [debounceSave]);
+
+  const updateProjectFiles = useCallback(
+    async (files) => {
+      if (!activeProject || !user) {
+        return;
+      }
+      debounceSave(files, activeProject._id);
+    },
+    [activeProject, user, debounceSave],
   );
 
   return (
@@ -211,6 +268,8 @@ export function AppContextProvider({ children }) {
         loadProjects,
         loadingActiveProject,
         activeFile,
+        handleChat,
+        updateProjectFiles
       }}
     >
       {children}
