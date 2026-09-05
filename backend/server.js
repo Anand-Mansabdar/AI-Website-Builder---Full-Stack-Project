@@ -5,9 +5,10 @@ import cookieParser from "cookie-parser";
 
 import { connectDB } from "./config/db.js";
 import authRouter from "./routes/auth.routes.js";
+import projectRouter from "./routes/project.routes.js";
 
 const app = express();
-connectDB();
+await connectDB();
 
 app.use(cors({ origin: process.env.ORIGINS.split(","), credentials: true }));
 app.use(cookieParser());
@@ -18,6 +19,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/auth", authRouter);
+app.use("/api/projects", projectRouter);
 
 // Global error handler
 app.use((error, _req, res, _next) => {
