@@ -271,9 +271,7 @@ export const updateProjectFiles = async (req, res) => {
 
   const filesObj = {};
   for (const [path, entry] of Object.entries(files)) {
-    if (typeof content === "string") {
-      filesObj[path] = entry.content;
-    }
+    filesObj[path] = entry.content;
   }
 
   return res.status(200).json({
