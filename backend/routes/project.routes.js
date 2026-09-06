@@ -9,6 +9,7 @@ import {
   updateProjectFiles,
 } from "../controllers/project.controller.js";
 import { authMiddleware } from "../middlewares/auth.middleware.js";
+import { chat } from "../controllers/chat.controller.js";
 
 projectRouter = express.Router();
 
@@ -21,5 +22,7 @@ projectRouter.get("/:id", getProject);
 projectRouter.delete("/:id", deleteProject);
 projectRouter.put("/:id/files", updateProjectFiles);
 projectRouter.post("/:id/publish", publishProject);
+
+projectRouter.post("/:id/chat", chat)
 
 export default projectRouter;
